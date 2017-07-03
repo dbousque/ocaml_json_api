@@ -1,16 +1,40 @@
 ### Starting build.
-# Target: test.ml.depends, tags: { extension:ml, file:test.ml, ocaml, ocamldep, package(cohttp.lwt), package(ppx_deriving_yojson), quiet }
-ocamlfind ocamldep -package ppx_deriving_yojson -package cohttp.lwt -modules test.ml > test.ml.depends
-# Target: test.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:test.cmo, file:test.ml, implem, ocaml, package(cohttp.lwt), package(ppx_deriving_yojson), quiet }
-ocamlfind ocamlc -c -package ppx_deriving_yojson -package cohttp.lwt -o test.cmo test.ml
-+ ocamlfind ocamlc -c -package ppx_deriving_yojson -package cohttp.lwt -o test.cmo test.ml
-File "test.ml", line 24, characters 8-15:
-Warning 26: unused variable inp_str.
-# Target: test.cmx, tags: { compile, extension:cmx, extension:ml, file:test.cmx, file:test.ml, implem, native, ocaml, package(cohttp.lwt), package(ppx_deriving_yojson), quiet }
-ocamlfind ocamlopt -c -package ppx_deriving_yojson -package cohttp.lwt -o test.cmx test.ml
-+ ocamlfind ocamlopt -c -package ppx_deriving_yojson -package cohttp.lwt -o test.cmx test.ml
-File "test.ml", line 24, characters 8-15:
-Warning 26: unused variable inp_str.
-# Target: test.native, tags: { dont_link_with, extension:native, file:test.native, link, native, ocaml, package(cohttp.lwt), package(ppx_deriving_yojson), program, quiet }
-ocamlfind ocamlopt -linkpkg -package ppx_deriving_yojson -package cohttp.lwt test.cmx -o test.native
+# Target: test2.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), extension:ml, file:test2.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules test2.ml > test2.ml.depends # cached
+# Target: backend.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), extension:ml, file:backend.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules backend.ml > backend.ml.depends # cached
+# Target: backend.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), byte, compile, extension:cmo, extension:ml, file:backend.cmo, file:backend.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o backend.cmo backend.ml # cached
+# Target: json_server.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), extension:ml, file:json_server.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules json_server.ml > json_server.ml.depends
+# Target: mode.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), extension:ml, file:mode.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules mode.ml > mode.ml.depends # cached
+# Target: mode.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), byte, compile, extension:cmo, extension:ml, file:mode.cmo, file:mode.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o mode.cmo mode.ml # cached
+# Target: route.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), extension:ml, file:route.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules route.ml > route.ml.depends # cached
+# Target: method.ml.depends, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), extension:ml, file:method.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package yojson -package ppx_deriving_yojson -package cohttp.lwt -modules method.ml > method.ml.depends # cached
+# Target: method.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), byte, compile, extension:cmo, extension:ml, file:method.cmo, file:method.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o method.cmo method.ml # cached
+# Target: route.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), byte, compile, extension:cmo, extension:ml, file:route.cmo, file:route.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o route.cmo route.ml # cached
+# Target: json_server.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), byte, compile, extension:cmo, extension:ml, file:json_server.cmo, file:json_server.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o json_server.cmo json_server.ml
+# Target: test2.cmo, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), byte, compile, extension:cmo, extension:ml, file:test2.cmo, file:test2.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o test2.cmo test2.ml # cached
+# Target: backend.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), compile, extension:cmx, extension:ml, file:backend.cmx, file:backend.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o backend.cmx backend.ml # cached
+# Target: mode.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), compile, extension:cmx, extension:ml, file:mode.cmx, file:mode.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o mode.cmx mode.ml # cached
+# Target: method.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), compile, extension:cmx, extension:ml, file:method.cmx, file:method.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o method.cmx method.ml # cached
+# Target: route.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), compile, extension:cmx, extension:ml, file:route.cmx, file:route.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o route.cmx route.ml # cached
+# Target: json_server.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), compile, extension:cmx, extension:ml, file:json_server.cmx, file:json_server.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o json_server.cmx json_server.ml
+# Target: test2.cmx, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), compile, extension:cmx, extension:ml, file:test2.cmx, file:test2.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -package yojson -package ppx_deriving_yojson -package cohttp.lwt -o test2.cmx test2.ml # cached
+# Target: test2.native, tags: { package(cohttp.lwt), package(ppx_deriving_yojson), package(yojson), dont_link_with, extension:native, file:test2.native, link, native, ocaml, program, quiet, traverse }
+ocamlfind ocamlopt -linkpkg -package yojson -package ppx_deriving_yojson -package cohttp.lwt backend.cmx method.cmx mode.cmx route.cmx json_server.cmx test2.cmx -o test2.native
 # Compilation successful.

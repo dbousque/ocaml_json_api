@@ -1,5 +1,0 @@
-
-
-type t =
-  | Cohttp
-  | Other
