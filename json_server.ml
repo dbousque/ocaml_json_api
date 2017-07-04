@@ -68,12 +68,15 @@ module Make : MAKESERVER =
     let register_route (module Rout : Route.ROUTE) =
       routes := (module Rout : Route.ROUTE) :: !routes
 
+    let make_response body =
+      print_endline body ;
+      body
+
     let listen () =
-      List.iter (fun (module Rout : Route.ROUTE) -> Printf.printf "path : %s\n" Rout.path) !routes ;
-      Printf.printf "Listening on port %d\n" port ;
+      List.iter (fun (module Rout : Route.ROUTE) -> ignore (Lwt_io.printf "path : %s\n" Rout.path)) !routes ;
       let server =
         let callback _conn req body =
-          body |> Cohttp_lwt_body.to_string >|= (fun body -> body)
+          body |> Cohttp_lwt_body.to_string >|= (fun body -> make_response body)
           >>= (fun body -> Server.respond_string ~status:`OK ~body ())
         in
         let mode = match mode with
