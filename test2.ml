@@ -1,16 +1,5 @@
 
 
-(*open Lwt
-open Cohttp
-open Cohttp_lwt_unix
-
- let server =
-  let callback _conn req body =
-    body |> Cohttp_lwt_body.to_string >|= (fun body -> )
-    >>= (fun body -> Server.respond_string ~status:`OK ~body ())
-  in
-  Server.create ~mode:(`TCP (`Port 8000)) (Server.make ~callback ())  *)
-
 module Users = struct
   let meth = Method.GET
   let path = "/users"
@@ -20,6 +9,7 @@ module Users = struct
   let validate params body =
     true
   let handle params body session_data =
+    print_endline (match body with | h::r -> h | _ -> "lol") ;
     "hello"
 end
 
@@ -33,7 +23,7 @@ module Options = struct
   }
 end
 
-module Server = Json_server.Make (Options)
+module Server = Server.Make (Options)
 
 module AuthMiddleware = struct
   let f body params session_data =
