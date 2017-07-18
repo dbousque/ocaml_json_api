@@ -9,7 +9,10 @@ let rec print_query = function
   | h :: tl -> Printf.printf "key=%s value=[%s]\n" (get_key h) (get_values h) ; print_query tl
   | [] -> ()
 
-let uri_params uri =
+let path_elements path =
+  path |> Str.split (Str.regexp "/") |> List.filter (fun s -> String.length s > 0)
+
+let uri_query uri =
   print_endline uri ;
   let query = uri |> Uri.of_string |> Uri.query in
   print_query query ;
