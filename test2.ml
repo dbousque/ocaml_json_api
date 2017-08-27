@@ -1,16 +1,26 @@
 
 
+MUST PREVENT THE USER FROM SETTING THE METH VALUE MANUALLY,
+BECAUSE THE PPX EXTENSION USES THE CONSTRUCTOR NAME TO DO TYPE VALIDATION
+SO PROBABLY SET AN OPTION IN THE PPX EXTENSION INSTEAD
+
 module Users = struct
   let meth = Method.GET
   let path = "/users/:userid"
+
   type params = {
     userid: string
   } [@@deriving yojson]
+
   type query = unit [@@deriving yojson]
+
   type body = string list [@@deriving yojson]
+
   type output = string [@@deriving yojson]
+
   let validate params query body session_data =
     true
+
   let handle params query body session_data =
     print_endline (match body with | h::r -> h | _ -> "lol") ;
     "hello"
