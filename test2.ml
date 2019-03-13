@@ -1,17 +1,46 @@
 
 
+MUST PREVENT THE USER FROM SETTING THE METH VALUE MANUALLY,
+BECAUSE THE PPX EXTENSION USES THE CONSTRUCTOR NAME TO DO TYPE VALIDATION
+SO PROBABLY SET AN OPTION IN THE PPX EXTENSION INSTEAD
+
 module Users = struct
   let meth = Method.GET
-  let path = "/users"
-  type params = int [@@deriving yojson]
+  let path = "/users/:userid"
+
+  type params = {
+    userid: string
+  } [@@deriving yojson]
+
+  type query = unit [@@deriving yojson]
+
   type body = string list [@@deriving yojson]
+
   type output = string [@@deriving yojson]
-  let validate params body =
+
+  let validate params query body session_data =
     true
-  let handle params body session_data =
+
+  let handle params query body session_data =
     print_endline (match body with | h::r -> h | _ -> "lol") ;
     "hello"
 end
+
+(*module Users = struct
+  let meth = Method.GET
+  let path = "/users/:userid"
+  type params = {
+    userid: string
+  }
+  type query = unit
+  type body = string list
+  type output = string
+  let validate params query body session_data =
+    true
+  let handle params query body session_data =
+    print_endline (match body with | h::r -> h | _ -> "lol") ;
+    "hello"
+end [@@deriving route]*)
 
 module Options = struct
   let mode = Mode.TCP
@@ -21,13 +50,17 @@ module Options = struct
     auth_id: string ;
     auth_token: string
   }
+  let default_session_data = {
+    auth_id = "" ;
+    auth_token = ""
+  }
 end
 
 module Server = Server.Make (Options)
 
 module AuthMiddleware = struct
-  let f body params session_data =
-    (body, params, Options.{ auth_id = "56bd9" ; auth_token = "1ac69123dda6" })
+  let f params query body session_data =
+    (params, query, body, Options.{ auth_id = "56bd9" ; auth_token = "1ac69123dda6" })
 end
 
 let () =
