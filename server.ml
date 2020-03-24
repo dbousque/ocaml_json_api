@@ -10,7 +10,7 @@ sig
   val mode : Mode.t
   val port : int
   val backend : Backend.t
-  type session_data
+  type session
 end
 
 module DefaultOptions : SERVEROPTIONS =
@@ -18,17 +18,17 @@ struct
   let mode = Mode.TCP
   let port = 8080
   let backend = Backend.Cohttp
-  type session_data = unit
+  type session = unit
 end
 
 module type SERVER =
 sig
-  type session_data_type
+  type session_type
 
   module type MIDDLEWARE =
   sig
-    val f : Yojson.Safe.json -> Yojson.Safe.json -> session_data_type ->
-                  (Yojson.Safe.json * Yojson.Safe.json * session_data_type)
+    val f : Yojson.Safe.json -> Yojson.Safe.json -> session_type ->
+                  (Yojson.Safe.json * Yojson.Safe.json * session_type)
   end
 
   module type ROUTE =
@@ -39,8 +39,8 @@ sig
     type query
     type body
     type output
-    val validate : params -> query -> body -> session_data_type -> bool
-    val handle : params -> query -> body -> session_data_type -> output
+    val validate : params -> query -> body -> session_type -> bool
+    val handle : params -> query -> body -> session_type -> output
   end
 
   val mode : Mode.t
@@ -57,19 +57,19 @@ end
 
 module type MAKESERVER =
   functor (Options : SERVEROPTIONS) ->
-    SERVER with type session_data_type = Options.session_data
+    SERVER with type session_type = Options.session
 
 module Make : MAKESERVER =
   functor (Options : SERVEROPTIONS) ->
   struct
     include Options
 
-    type session_data_type = Options.session_data
+    type session_type = Options.session
 
     module type MIDDLEWARE =
     sig
-      val f : Yojson.Safe.json -> Yojson.Safe.json -> session_data_type ->
-                    (Yojson.Safe.json * Yojson.Safe.json * session_data_type)
+      val f : Yojson.Safe.json -> Yojson.Safe.json -> session_type ->
+                    (Yojson.Safe.json * Yojson.Safe.json * session_type)
     end
 
     module type ROUTE =
@@ -80,8 +80,8 @@ module Make : MAKESERVER =
       type query
       type body
       type output
-      val validate : params -> query -> body -> session_data_type -> bool
-      val handle : params -> query -> body -> session_data_type -> output
+      val validate : params -> query -> body -> session_type -> bool
+      val handle : params -> query -> body -> session_type -> output
     end
 
     let middlewares = ref []
@@ -127,15 +127,15 @@ module Make : MAKESERVER =
         let query_yojson = Parse.uri_query uri in
         let params = () in
         let body = body in
-        let session_data = Options.default_session_data in
-        let call_middleware (params, query, body, session_data) (module Middleware : MIDDLEWARE) =
-          Middleware.f params query body session_data
+        let session = Options.default_session in
+        let call_middleware (params, query, body, session) (module Middleware : MIDDLEWARE) =
+          Middleware.f params query body session
         in
-        let (params, query, body, session_data) = List.fold_left call_middleware middlewares in
-        match Route.validate params query body session_data with
+        let (params, query, body, session) = List.fold_left call_middleware middlewares in
+        match Route.validate params query body session with
         | false -> ("error, route didn't validate", 500)
         | true -> (
-          let output = Route.handle params query body session_data in
+          let output = Route.handle params query body session in
           let res = output |> output_to_yojson |> Yojson.Safe.to_string in
           res, 200
         )
